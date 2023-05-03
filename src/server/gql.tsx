@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default function discussionGql(ghDiscussionCategoryId: string | undefined) {
+export function discussionGql(ghDiscussionCategoryId: string | undefined) {
   return `{
   viewer {
     login
@@ -31,4 +31,24 @@ export default function discussionGql(ghDiscussionCategoryId: string | undefined
     }
   }
 }`;
+}
+
+// single post
+export function discussionDetailGql(postId: number | undefined) {
+  return `
+  {
+    repository(name: "Nextjs-basic-blog_with_Github_GraphQL", owner: "Thanhdat013") {
+    discussion(number: ${postId}) {
+      bodyHTML
+      createdAt
+      title
+      author {
+        login
+        url
+        avatarUrl
+      }
+    }
+  }
+  }
+  `;
 }

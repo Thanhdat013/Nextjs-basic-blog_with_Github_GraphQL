@@ -1,5 +1,5 @@
-import { TBlogPost } from '../types/typeBlog';
-import discussionGql from './gql';
+import { TBlogDetail, TBlogPost } from '../types/typeBlog';
+import { discussionGql, discussionDetailGql } from './gql';
 
 const API_URL = 'https://api.github.com/graphql';
 const GH_ACCESS_TOKEN = process.env.GH_ACCESS_TOKEN;
@@ -51,4 +51,33 @@ export async function getBlogs(): Promise<TBlogPost[]> {
     return postItem;
   });
   return post;
+}
+
+export async function getBlogDetail(postId: number): Promise<TBlogDetail> {
+  const response = await fetch(API_URL, {
+    method: 'POST',
+    headers: {
+      Authorization: `token ${GH_ACCESS_TOKEN}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ query: discussionDetailGql(postId) }),
+  });
+
+  let res = await response.json();
+
+  let discussionDetail = res.data.repository.discussion;
+  const {
+    author: { url: authorUrl, login: authorName, avatarUrl: authorAvatar },
+    createdAt,
+    title,
+    bodyHTML: html,
+  } = discussionDetail;
+
+  const detail = {
+    author: { url: authorUrl, name: authorName, avatar: authorAvatar },
+    title,
+    createdAt,
+    bodyHTML: html,
+  };
+  return detail;
 }

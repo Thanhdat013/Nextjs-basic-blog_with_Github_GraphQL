@@ -14,3 +14,14 @@ export interface TBlogPost {
     url: string;
   };
 }
+
+export interface TBlogDetail {
+  title: string;
+  bodyHTML: string;
+  createdAt: string;
+  author: {
+    name: string;
+    avatar: string;
+    url: string;
+  };
+}
